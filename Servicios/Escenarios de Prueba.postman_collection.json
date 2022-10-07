@@ -1,0 +1,1966 @@
+{
+	"info": {
+		"_postman_id": "c8769c69-9174-4960-9d56-2a0afe3c7185",
+		"name": "Escenarios de Prueba",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7685811"
+	},
+	"item": [
+		{
+			"name": "Verificar Creación de Reserva Correcta",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var access_token_response = jsonData['token']\r",
+									"\r",
+									"pm.globals.set(\"access_token\", access_token_response)\r",
+									"\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome6\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome6\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"token\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"token\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome6\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/auth",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"// Verificamos que el body llegue completo o llegue con información\r",
+									"pm.test(\"Response Body esta completo\", function () {\r",
+									"    responseBody !== null\r",
+									"})\r",
+									"\r",
+									"// Verificamos el tiempo de demora que nos devuelve el response\r",
+									"pm.test(\"Tiempo de Respuesta es menor a 700ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(700)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome1\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome1\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"bookingid\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"booking\": {\r",
+									"                    \"$ref\": \"#/definitions/Booking\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"booking\",\r",
+									"                \"bookingid\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome1\"\r",
+									"        },\r",
+									"        \"Booking\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                    \"$ref\": \"#/definitions/Bookingdates\"\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"additionalneeds\",\r",
+									"                \"bookingdates\",\r",
+									"                \"depositpaid\",\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\"\r",
+									"            ],\r",
+									"            \"title\": \"Booking\"\r",
+									"        },\r",
+									"        \"Bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ],\r",
+									"            \"title\": \"Bookingdates\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Miguel\",\r\n    \"lastname\" : \"Rodriguez\",\r\n    \"totalprice\" : 1500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verificar Creación de Reserva Incorrecto",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var access_token_response = jsonData['token']\r",
+									"\r",
+									"pm.globals.set(\"access_token\", access_token_response)\r",
+									"\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome6\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome6\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"token\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"token\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome6\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/auth",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 500\", function () {\r",
+									"    pm.response.to.have.status(500)\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Miguel\",\r\n    \"lastname\" : \"Rodriguez\",\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verificar Actualización de Reserva Correcta",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var access_token_response = jsonData['token']\r",
+									"\r",
+									"pm.globals.set(\"access_token\", access_token_response)\r",
+									"\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome6\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome6\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"token\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"token\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome6\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/auth",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"// Verificamos que el body llegue completo o llegue con información\r",
+									"pm.test(\"Response Body esta completo\", function () {\r",
+									"    responseBody !== null\r",
+									"})\r",
+									"\r",
+									"// Verificamos el tiempo de demora que nos devuelve el response\r",
+									"pm.test(\"Tiempo de Respuesta es menor a 700ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(700)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome1\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome1\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"bookingid\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"booking\": {\r",
+									"                    \"$ref\": \"#/definitions/Booking\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"booking\",\r",
+									"                \"bookingid\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome1\"\r",
+									"        },\r",
+									"        \"Booking\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                    \"$ref\": \"#/definitions/Bookingdates\"\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"additionalneeds\",\r",
+									"                \"bookingdates\",\r",
+									"                \"depositpaid\",\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\"\r",
+									"            ],\r",
+									"            \"title\": \"Booking\"\r",
+									"        },\r",
+									"        \"Bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ],\r",
+									"            \"title\": \"Bookingdates\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Miguel\",\r\n    \"lastname\" : \"Rodriguez\",\r\n    \"totalprice\" : 1500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"// Verificamos que el body llegue completo o llegue con información\r",
+									"pm.test(\"Response Body esta completo\", function () {\r",
+									"    responseBody !== null\r",
+									"})\r",
+									"\r",
+									"// Verificamos el tiempo de demora que nos devuelve el response\r",
+									"pm.test(\"Tiempo de Respuesta es menor a 700ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(700)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome5\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome5\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                    \"$ref\": \"#/definitions/Bookingdates\"\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"additionalneeds\",\r",
+									"                \"bookingdates\",\r",
+									"                \"depositpaid\",\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome5\"\r",
+									"        },\r",
+									"        \"Bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ],\r",
+									"            \"title\": \"Bookingdates\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Pedro\",\r\n    \"lastname\" : \"Gonzales\",\r\n    \"totalprice\" : 8500,\r\n    \"depositpaid\" : false,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Breakfast\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking/10",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verificar Actualización de Reserva Incorrecta",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var access_token_response = jsonData['token']\r",
+									"\r",
+									"pm.globals.set(\"access_token\", access_token_response)\r",
+									"\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome6\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome6\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"token\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"token\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome6\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/auth",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"// Verificamos que el body llegue completo o llegue con información\r",
+									"pm.test(\"Response Body esta completo\", function () {\r",
+									"    responseBody !== null\r",
+									"})\r",
+									"\r",
+									"// Verificamos el tiempo de demora que nos devuelve el response\r",
+									"pm.test(\"Tiempo de Respuesta es menor a 700ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(700)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome1\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome1\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"bookingid\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"booking\": {\r",
+									"                    \"$ref\": \"#/definitions/Booking\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"booking\",\r",
+									"                \"bookingid\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome1\"\r",
+									"        },\r",
+									"        \"Booking\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                    \"$ref\": \"#/definitions/Bookingdates\"\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"additionalneeds\",\r",
+									"                \"bookingdates\",\r",
+									"                \"depositpaid\",\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\"\r",
+									"            ],\r",
+									"            \"title\": \"Booking\"\r",
+									"        },\r",
+									"        \"Bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ],\r",
+									"            \"title\": \"Bookingdates\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Eduardito\",\r\n    \"lastname\" : \"Victorino\",\r\n    \"totalprice\" : 1500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"El status code es 404\", function () {\r",
+									"    pm.response.to.have.status(404)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Gato\",\r\n    \"lastname\" : \"Victorino\",\r\n    \"totalprice\" : 1500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking/",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verificar Actualización Parcial de Reserva Correcta",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var access_token_response = jsonData['token']\r",
+									"\r",
+									"pm.globals.set(\"access_token\", access_token_response)\r",
+									"\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome6\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome6\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"token\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"token\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome6\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/auth",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var booking_id_response = jsonData['bookingid']\r",
+									"pm.globals.set(\"booking_id\", booking_id_response);\r",
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"// Verificamos que el body llegue completo o llegue con información\r",
+									"pm.test(\"Response Body esta completo\", function () {\r",
+									"    responseBody !== null\r",
+									"})\r",
+									"\r",
+									"// Verificamos el tiempo de demora que nos devuelve el response\r",
+									"pm.test(\"Tiempo de Respuesta es menor a 700ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(700)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome1\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome1\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"bookingid\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"booking\": {\r",
+									"                    \"$ref\": \"#/definitions/Booking\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"booking\",\r",
+									"                \"bookingid\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome1\"\r",
+									"        },\r",
+									"        \"Booking\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                    \"$ref\": \"#/definitions/Bookingdates\"\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"additionalneeds\",\r",
+									"                \"bookingdates\",\r",
+									"                \"depositpaid\",\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\"\r",
+									"            ],\r",
+									"            \"title\": \"Booking\"\r",
+									"        },\r",
+									"        \"Bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ],\r",
+									"            \"title\": \"Bookingdates\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Miguel\",\r\n    \"lastname\" : \"Rodriguez\",\r\n    \"totalprice\" : 1500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PartialUpdateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"// Verificamos que el body llegue completo o llegue con información\r",
+									"pm.test(\"Response Body esta completo\", function () {\r",
+									"    responseBody !== null\r",
+									"})\r",
+									"\r",
+									"// Verificamos el tiempo de demora que nos devuelve el response\r",
+									"pm.test(\"Tiempo de Respuesta es menor a 700ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(700)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome5\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome5\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                    \"$ref\": \"#/definitions/Bookingdates\"\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"additionalneeds\",\r",
+									"                \"bookingdates\",\r",
+									"                \"depositpaid\",\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome5\"\r",
+									"        },\r",
+									"        \"Bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ],\r",
+									"            \"title\": \"Bookingdates\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Pepe\",\r\n    \"lastname\" : \"Trauco\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking/{{booking_id}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking",
+								"{{booking_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verificar Actualización Parcial de Reserva Incorrecta",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var access_token_response = jsonData['token']\r",
+									"\r",
+									"pm.globals.set(\"access_token\", access_token_response)\r",
+									"\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome6\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome6\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"token\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"token\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome6\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/auth",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"// Verificamos que el body llegue completo o llegue con información\r",
+									"pm.test(\"Response Body esta completo\", function () {\r",
+									"    responseBody !== null\r",
+									"})\r",
+									"\r",
+									"// Verificamos el tiempo de demora que nos devuelve el response\r",
+									"pm.test(\"Tiempo de Respuesta es menor a 700ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(700)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome1\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome1\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"bookingid\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"booking\": {\r",
+									"                    \"$ref\": \"#/definitions/Booking\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"booking\",\r",
+									"                \"bookingid\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome1\"\r",
+									"        },\r",
+									"        \"Booking\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                    \"$ref\": \"#/definitions/Bookingdates\"\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"additionalneeds\",\r",
+									"                \"bookingdates\",\r",
+									"                \"depositpaid\",\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\"\r",
+									"            ],\r",
+									"            \"title\": \"Booking\"\r",
+									"        },\r",
+									"        \"Bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ],\r",
+									"            \"title\": \"Bookingdates\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Eduardito\",\r\n    \"lastname\" : \"Victorino\",\r\n    \"totalprice\" : 1500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PartialUpdateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"El status code es 400\", function () {\r",
+									"    pm.response.to.have.status(400)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"James\",\r\n    \"lastname\" : \"Brown\",\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking/{{booking_id}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking",
+								"{{booking_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verificar Eliminacion de Reserva Correcta",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var access_token_response = jsonData['token']\r",
+									"\r",
+									"pm.globals.set(\"access_token\", access_token_response)\r",
+									"\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome6\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome6\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"token\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"token\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome6\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/auth",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var booking_id_response = jsonData['bookingid']\r",
+									"\r",
+									"pm.globals.set(\"booking_id\", booking_id_response);\r",
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"// Verificamos que el body llegue completo o llegue con información\r",
+									"pm.test(\"Response Body esta completo\", function () {\r",
+									"    responseBody !== null\r",
+									"})\r",
+									"\r",
+									"// Verificamos el tiempo de demora que nos devuelve el response\r",
+									"pm.test(\"Tiempo de Respuesta es menor a 700ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(700)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome1\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome1\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"bookingid\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"booking\": {\r",
+									"                    \"$ref\": \"#/definitions/Booking\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"booking\",\r",
+									"                \"bookingid\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome1\"\r",
+									"        },\r",
+									"        \"Booking\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                    \"$ref\": \"#/definitions/Bookingdates\"\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"additionalneeds\",\r",
+									"                \"bookingdates\",\r",
+									"                \"depositpaid\",\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\"\r",
+									"            ],\r",
+									"            \"title\": \"Booking\"\r",
+									"        },\r",
+									"        \"Bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ],\r",
+									"            \"title\": \"Bookingdates\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Miguel\",\r\n    \"lastname\" : \"Rodriguez\",\r\n    \"totalprice\" : 1500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 201\", function () {\r",
+									"    pm.response.to.have.status(201)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/booking/{{booking_id}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking",
+								"{{booking_id}}"
+							],
+							"query": [
+								{
+									"key": "Cookie",
+									"value": "token={{access_token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Verificar Eliminacion de Reserva Incorrecta",
+			"item": [
+				{
+					"name": "CreateToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var access_token_response = jsonData['token']\r",
+									"\r",
+									"pm.globals.set(\"access_token\", access_token_response)\r",
+									"\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome6\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome6\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"token\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"token\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome6\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/auth",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)\r",
+									"var booking_id_response = jsonData['bookingid']\r",
+									"\r",
+									"pm.globals.set(\"booking_id\", booking_id_response);\r",
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 200\", function () {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"// Verificamos que el body llegue completo o llegue con información\r",
+									"pm.test(\"Response Body esta completo\", function () {\r",
+									"    responseBody !== null\r",
+									"})\r",
+									"\r",
+									"// Verificamos el tiempo de demora que nos devuelve el response\r",
+									"pm.test(\"Tiempo de Respuesta es menor a 700ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(700)\r",
+									"})\r",
+									"\r",
+									"var object_schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-06/schema#\",\r",
+									"    \"$ref\": \"#/definitions/Welcome1\",\r",
+									"    \"definitions\": {\r",
+									"        \"Welcome1\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"bookingid\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"booking\": {\r",
+									"                    \"$ref\": \"#/definitions/Booking\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"booking\",\r",
+									"                \"bookingid\"\r",
+									"            ],\r",
+									"            \"title\": \"Welcome1\"\r",
+									"        },\r",
+									"        \"Booking\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"firstname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"lastname\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                },\r",
+									"                \"totalprice\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                },\r",
+									"                \"depositpaid\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                },\r",
+									"                \"bookingdates\": {\r",
+									"                    \"$ref\": \"#/definitions/Bookingdates\"\r",
+									"                },\r",
+									"                \"additionalneeds\": {\r",
+									"                    \"type\": \"string\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"additionalneeds\",\r",
+									"                \"bookingdates\",\r",
+									"                \"depositpaid\",\r",
+									"                \"firstname\",\r",
+									"                \"lastname\",\r",
+									"                \"totalprice\"\r",
+									"            ],\r",
+									"            \"title\": \"Booking\"\r",
+									"        },\r",
+									"        \"Bookingdates\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"additionalProperties\": false,\r",
+									"            \"properties\": {\r",
+									"                \"checkin\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                },\r",
+									"                \"checkout\": {\r",
+									"                    \"type\": \"string\",\r",
+									"                    \"format\": \"date\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"                \"checkin\",\r",
+									"                \"checkout\"\r",
+									"            ],\r",
+									"            \"title\": \"Bookingdates\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									";\r",
+									"\r",
+									"tests['Valid Schema'] = tv4.validate(jsonData,  object_schema)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\" : \"Miguel\",\r\n    \"lastname\" : \"Rodriguez\",\r\n    \"totalprice\" : 1500,\r\n    \"depositpaid\" : true,\r\n    \"bookingdates\" : {\r\n        \"checkin\" : \"2020-05-01\",\r\n        \"checkout\" : \"2020-05-10\"\r\n    },\r\n    \"additionalneeds\" : \"Lunch\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/booking",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteBooking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Verificamos el codigo de respuesta\r",
+									"pm.test(\"El status code es 404\", function () {\r",
+									"    pm.response.to.have.status(404)\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BaseUrl}}/booking",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"booking"
+							],
+							"query": [
+								{
+									"key": "Cookie",
+									"value": "token={{access_token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
